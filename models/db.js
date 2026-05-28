@@ -2,11 +2,11 @@ const { Pool } = require('pg');
 
 // Configuración de la conexión
 const pool = new Pool({
-  user: 'postgres',           // Usuario por defecto
-  host: 'localhost',          //(HAU GERO ALDATU INBIKODA)
-  database: 'ARTRugby',       // El nombre de mi base de datos
-  password: '2_datubase_2',  
-  port: 5432,                 
+  user: process.env.DB_USER,
+  host: process.env.DB_HOST,
+  database: process.env.DB_NAME,
+  password: process.env.DB_PASSWORD,
+  port: process.env.DB_PORT,                
 });
 
 // Probatu konexioa (Heartbeat)
