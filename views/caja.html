@@ -1,0 +1,464 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=no">
+    <meta name="apple-mobile-web-app-capable" content="yes">
+    <meta name="apple-mobile-web-app-status-bar-style" content="default">
+    <title>Kaxa - ART Kudeaketa</title>
+    
+    <style>
+        :root {
+            --primary: #722F6A; 
+            --primary-hover: #5A2553;
+            --text-dark: #111827;
+            --text-muted: #6B7280;
+            --bg-main: #FFFFFF; 
+            --bg-surface: #FFFFFF;
+            --border-color: #E5E7EB;
+            --success: #10B981; 
+            --success-hover: #059669;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            margin: 0;
+            display: flex;
+            height: 100vh;
+            overflow: hidden;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+        }
+
+        /* EZKERREKO ALDEA (Produktuak) */
+        .produktu-gunea {
+            flex: 2;
+            display: flex;
+            flex-direction: column;
+            background-color: var(--bg-main);
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            padding: 0 30px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            box-sizing: border-box;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .accent-line {
+            width: 8px;
+            height: 30px;
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        .header h1 { 
+            margin: 0; 
+            color: var(--text-dark); 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+        }
+
+        /* EGUNAK HAUTATZEKO BOTOIAK */
+        .egun-botoiak {
+            display: flex;
+            gap: 10px;
+            margin-left: 20px;
+        }
+        
+        .egun-botoiak button {
+            background-color: var(--bg-surface);
+            border: 2px solid var(--border-color);
+            color: var(--text-muted);
+            padding: 8px 20px;
+            border-radius: 8px;
+            font-weight: 700;
+            font-size: 1rem;
+            cursor: pointer;
+            transition: all 0.2s;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .egun-botoiak button.active {
+            background-color: #F3E8F1;
+            border-color: var(--primary);
+            color: var(--primary);
+        }
+        
+        .egun-botoiak button:hover:not(.active) {
+            border-color: #d1d5db;
+            color: var(--text-dark);
+        }
+
+        .logout-btn { 
+            background: transparent; 
+            color: var(--danger); 
+            border: 1px solid #FECACA; 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-size: 0.95rem;
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+        
+        .logout-btn:hover {
+            background: #FEF2F2;
+            border-color: var(--danger);
+        }
+
+        /* Scroll gunea produktuentzat */
+        .produktu-scroll {
+            flex: 1;
+            overflow-y: auto;
+            padding: 20px 30px;
+            display: flex;
+            justify-content: center; 
+        }
+
+        .botoi-sarea {
+            display: flex;
+            flex-wrap: wrap;
+            justify-content: center;
+            gap: 15px; 
+        }
+
+        /* Produktu Txartela */
+        .produktu-card {
+            background-color: var(--bg-surface);
+            border: 1px solid var(--border-color);
+            border-radius: 12px;
+            padding: 16px; 
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            gap: 15px; 
+            transition: all 0.2s ease;
+            box-sizing: border-box; 
+            position: relative;
+        }
+
+        .produktu-card:hover {
+            border-color: var(--primary);
+            box-shadow: 0 4px 15px rgba(114, 47, 106, 0.05);
+        }
+
+        .stock-badge {
+            position: absolute;
+            top: 10px;
+            right: 10px;
+            background-color: var(--bg-light);
+            color: var(--text-dark);
+            font-size: 1.4rem;
+            font-weight: 900; 
+            padding: 4px 8px; 
+            border-radius: 6px;
+            border: 1px solid var(--border-color);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+            z-index: 2;
+        }
+        .stock-badge.stock-low {
+            background-color: #FEF2F2;
+            color: var(--danger);
+            border-color: #FECACA;
+        }
+
+        .prod-content {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            flex: 1; 
+            width: 100%;
+        }
+
+        .produktu-irudia {
+            width: 100%;
+            height: 140px; 
+            object-fit: contain;
+            border-radius: 8px;
+            margin-bottom: 5px;
+        }
+
+        .prod-info { text-align: center; }
+        .prod-info h3 { 
+            margin: 0 0 6px 0; 
+            font-size: 1.5rem; 
+            font-weight: 700; 
+            color: var(--text-dark); 
+            line-height: 1.2;
+        }
+        .prod-info .prezioa { 
+            color: var(--primary); 
+            font-weight: 800; 
+            font-size: 1.7rem; 
+            display: block;
+        }
+
+        /* EKINTZA BOTOIAK (- eta +) */
+        .card-actions {
+            display: flex;
+            gap: 12px;
+            width: 100%;
+        }
+
+        .btn-minus, .btn-plus {
+            background-color: var(--primary);
+            color: white;
+            flex: 1;
+            height: 48px; 
+            border: none;
+            border-radius: 10px;
+            font-size: 1.8rem; 
+            font-weight: 800;
+            cursor: pointer;
+            transition: all 0.1s ease;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        
+        .btn-minus:active, .btn-plus:active { 
+            background-color: var(--primary-hover); 
+            transform: scale(0.95); 
+        }
+
+        .produktu-footer {
+            padding: 10px 40px; 
+            background-color: var(--bg-surface);
+            border-top: 1px solid var(--border-color);
+            display: flex;
+            align-items: center;
+        }
+
+        .bottom-logo {
+            max-width: 80px; 
+            height: auto;
+            opacity: 0.9; 
+        }
+
+        /* ESKUINEKO ALDEA (Tiketa) */
+        .tiket-gunea {
+            flex: 1;
+            background: var(--bg-surface);
+            border-left: 1px solid var(--border-color);
+            display: flex;
+            flex-direction: column;
+            min-width: 480px; 
+            z-index: 10;
+        }
+
+        .tiket-header {
+            display: flex;
+            align-items: center;
+            height: 90px;
+            padding: 0 35px;
+            background-color: var(--bg-surface);
+            color: var(--text-dark);
+            font-size: 1.8rem; 
+            font-weight: 800;
+            border-bottom: 1px solid var(--border-color);
+            letter-spacing: -0.5px;
+            box-sizing: border-box;
+        }
+
+        .tiket-lerroak {
+            flex: 1;
+            overflow-y: auto;
+            padding: 15px 35px;
+        }
+
+        .tiket-item {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 22px 0;
+            border-bottom: 1px solid var(--border-color);
+            font-size: 1.8rem; 
+            font-weight: 500;
+        }
+
+        .tiket-item-info { display: flex; align-items: center; gap: 16px; }
+        
+        .tiket-kantitatea { 
+            background: #F3E8F1; 
+            color: var(--primary); 
+            padding: 6px 12px; 
+            border-radius: 8px; 
+            font-weight: 800; 
+            font-size: 1.5rem; 
+        }
+        
+        .ezabatu-btn { 
+            background: transparent; 
+            color: var(--text-muted); 
+            border: none; 
+            font-size: 1.6rem; 
+            cursor: pointer; 
+            transition: color 0.2s;
+        }
+        .ezabatu-btn:hover { color: var(--danger); }
+
+        .tiket-totala {
+            background-color: var(--bg-surface);
+            padding: 25px 35px;
+            font-size: 2.2rem; 
+            font-weight: 800;
+            display: flex;
+            justify-content: space-between;
+            border-top: 1px solid var(--border-color);
+            color: var(--text-dark);
+        }
+
+        .ordainketa-gunea {
+            padding: 15px 30px;
+            background: #FAFAFA;
+            border-top: 1px solid var(--border-color);
+        }
+
+        .kalkulu-lerroa {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+            font-size: 1.8rem;
+            font-weight: 600;
+            color: var(--text-dark);
+        }
+
+        .kalkulu-lerroa input {
+            width: 150px;
+            padding: 14px;
+            font-size: 1.8rem;
+            text-align: right;
+            border: 1px solid var(--border-color);
+            border-radius: 8px;
+            outline: none;
+            color: var(--text-dark);
+            font-weight: 700;
+            transition: all 0.2s;
+        }
+        .kalkulu-lerroa input:focus { 
+            border-color: var(--success); 
+            box-shadow: 0 0 0 3px rgba(16, 185, 129, 0.1); 
+        }
+
+        .bueltak-lerroa { 
+            color: var(--success); 
+            font-size: 2.2rem; 
+            font-weight: 800;
+            margin-bottom: 0;
+        }
+
+        .kobratu-btn {
+            background-color: var(--success);
+            color: white;
+            border: none;
+            padding: 20px; 
+            font-size: 1.6rem; 
+            font-weight: 800;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            letter-spacing: 1px;
+            text-transform: uppercase;
+        }
+        .kobratu-btn:hover { background-color: var(--success-hover); }
+
+        #mezu-laukia {
+            position: fixed;
+            bottom: -100px;
+            left: 50%;
+            transform: translateX(-50%);
+            background-color: var(--success);
+            color: white;
+            padding: 16px 32px;
+            border-radius: 12px;
+            font-size: 1.2rem;
+            font-weight: 600;
+            box-shadow: 0 10px 25px rgba(16, 185, 129, 0.3);
+            transition: bottom 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            z-index: 1000;
+            text-align: center;
+        }
+
+        #mezu-laukia.erakutsi {
+            bottom: 40px;
+        }
+    </style>
+</head>
+<body>
+
+    <div class="produktu-gunea">
+        <div class="header">
+            <div class="header-brand">
+                <div class="accent-line"></div>
+                <h1>ART</h1>
+                
+                <div class="egun-botoiak">
+                    <button id="btn-osteguna" onclick="aldatuEguna('osteguna')">Osteguna</button>
+                    <button id="btn-ostirala" onclick="aldatuEguna('ostirala')" class="active">Ostirala</button>
+                    <button id="btn-zapatua" onclick="aldatuEguna('zapatua')">Zapatua</button>
+                </div>
+            </div>
+        </div>
+        
+        <div class="produktu-scroll">
+            <div class="botoi-sarea" id="produktu-botoiak">
+                <p style="color: var(--text-muted); font-weight: 500; font-size: 1.1rem;">Kargatzen...</p>
+            </div>
+        </div>
+
+        <div class="produktu-footer">
+            <img src="/img/ARTLogo.png" alt="ART Logo" class="bottom-logo">
+        </div>
+    </div>
+
+    <div class="tiket-gunea">
+        <div class="tiket-header">Saskia</div>
+        
+        <div class="tiket-lerroak" id="tiket-lerroak">
+        </div>
+
+        <div class="tiket-totala">
+            <span>GUZTIRA:</span>
+            <span id="totala-text">0.00 €</span>
+        </div>
+        
+        <div class="ordainketa-gunea">
+            <div class="kalkulu-lerroa">
+                <label>Emandako dirua:</label>
+                <div>
+                    <input type="number" id="emandako-dirua" placeholder="0.00" min="0" step="0.01"> €
+                </div>
+            </div>
+            <div class="kalkulu-lerroa bueltak-lerroa">
+                <label>Bueltak:</label>
+                <span id="bueltak-text">0.00 €</span>
+            </div>
+        </div>
+
+        <button class="kobratu-btn" onclick="kobratu()">KOBRATU</button>
+    </div>
+
+    <div id="mezu-laukia"></div>
+
+    <script src="/js/caja.js"></script>
+</body>
+</html>

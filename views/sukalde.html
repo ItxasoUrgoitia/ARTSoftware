@@ -1,0 +1,204 @@
+<!DOCTYPE html>
+<html lang="eu">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sukaldea - ART Garagardo Azoka</title>
+    
+    <style>
+        :root {
+            --primary: #722F6A; 
+            --text-dark: #111827;
+            --text-muted: #6B7280;
+            --bg-main: #F9FAFB; 
+            --bg-surface: #FFFFFF;
+            --border-color: #E5E7EB;
+            --danger: #EF4444;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+            background-color: var(--bg-main);
+            margin: 0;
+            color: var(--text-dark);
+            -webkit-font-smoothing: antialiased;
+            display: flex;
+            flex-direction: column;
+            height: 100vh;
+        }
+
+        /* GOIBURUA */
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            height: 70px;
+            padding: 0 40px;
+            background-color: var(--bg-surface);
+            border-bottom: 1px solid var(--border-color);
+            flex-shrink: 0;
+        }
+
+        .header-brand {
+            display: flex;
+            align-items: center;
+            gap: 15px;
+        }
+
+        .accent-line {
+            width: 8px;
+            height: 30px;
+            background-color: var(--primary);
+            border-radius: 4px;
+        }
+
+        .header h1 { 
+            margin: 0; 
+            color: var(--text-dark); 
+            font-size: 1.8rem; 
+            font-weight: 800; 
+            letter-spacing: -0.5px;
+            text-transform: uppercase;
+        }
+
+        .header-info {
+            color: var(--text-muted);
+            font-size: 1.2rem;
+            font-weight: 600;
+        }
+
+        .logout-btn { 
+            background: transparent; 
+            color: var(--danger); 
+            border: 1px solid #FECACA; 
+            padding: 8px 16px; 
+            border-radius: 8px; 
+            font-weight: 600; 
+            font-size: 0.95rem;
+            cursor: pointer; 
+            transition: all 0.2s ease;
+            text-transform: uppercase;
+        }
+        
+        .logout-btn:hover {
+            background: #FEF2F2;
+            border-color: var(--danger);
+        }
+
+        /* EDUKIONTZI NAGUSIA */
+        .main-content {
+            flex: 1;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            padding: 40px;
+        }
+
+        .dashboard-title {
+            font-size: 2.5rem;
+            font-weight: 800;
+            color: var(--primary);
+            margin-bottom: 40px;
+            text-align: center;
+            letter-spacing: -0.5px;
+        }
+
+        /* DASHBOARD TXARTELAK */
+        .stats-grid {
+            display: flex;
+            justify-content: center;
+            gap: 40px;
+            width: 100%;
+            max-width: 1400px;
+        }
+
+        .stat-card {
+            background-color: var(--bg-surface);
+            border: 2px solid var(--border-color);
+            border-radius: 20px;
+            padding: 50px 40px;
+            flex: 1;
+            text-align: center;
+            box-shadow: 0 10px 25px rgba(0,0,0,0.05);
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+
+        .stat-title {
+            font-size: 2.2rem;
+            font-weight: 700;
+            color: var(--text-muted);
+            text-transform: uppercase;
+            letter-spacing: 1px;
+        }
+
+        .stat-number {
+            font-size: 8rem; /* Zenbaki ERRALDOIAK */
+            font-weight: 900;
+            color: var(--text-dark);
+            line-height: 1;
+        }
+
+        .last-update {
+            margin-top: 50px;
+            font-size: 1.2rem;
+            color: var(--text-muted);
+            font-weight: 500;
+        }
+
+        #errore-mezua {
+            color: var(--danger);
+            font-size: 1.5rem;
+            font-weight: 700;
+            margin-top: 20px;
+            display: none;
+        }
+
+    </style>
+</head>
+<body>
+
+    <div class="header">
+        <div class="header-brand">
+            <div class="accent-line"></div>
+            <h1>ART</h1>
+        </div>
+        
+        <div class="header-info">
+            Azken 30 minutuetako laburpena
+        </div>
+
+    </div>
+
+    <div class="main-content">
+        <div class="dashboard-title">ESKAERAK</div>
+        
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-title">Oilaskoa</div>
+                <div class="stat-number" id="num-oilaskoa">-</div>
+            </div>
+            
+            <div class="stat-card">
+                <div class="stat-title">Kodilloa</div>
+                <div class="stat-number" id="num-kodilloa">-</div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-title">Edariak</div>
+                <div class="stat-number" id="num-edariak">-</div>
+            </div>
+        </div>
+
+        <div class="last-update" id="last-update-text">
+            Kargatzen...
+        </div>
+        
+        <div id="errore-mezua">Errorea zerbitzariarekin konektatzean.</div>
+    </div>
+
+    <script src="/js/sukalde.js"></script>
+</body>
+</html>
