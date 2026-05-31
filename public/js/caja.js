@@ -200,6 +200,15 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
                     margin: 0; 
                     size: 80mm 3276mm; 
                 }
+                    html, body {
+                    height: auto;
+                    margin: 0;
+                    padding: 0;
+                }
+                table, tr, td, .totals-table, .center {
+                    page-break-inside: avoid;
+                    break-inside: avoid;
+                }
                 body { font-family: 'Courier New', Courier, monospace; width: 78mm; margin: 0; padding: 0; color: #000; font-size: 14px; }
                 .center { text-align: center; }
                 .bold { font-weight: bold; }
