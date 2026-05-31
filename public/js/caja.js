@@ -196,6 +196,10 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
         <html>
         <head>
             <style>
+                @page { 
+                    margin: 0; 
+                    size: 80mm 3276mm; 
+                }
                 body { font-family: 'Courier New', Courier, monospace; width: 78mm; margin: 0; padding: 0; color: #000; font-size: 14px; }
                 .center { text-align: center; }
                 .bold { font-weight: bold; }
@@ -253,6 +257,7 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
             <div class="center" style="margin-top: 15px;">
                 <p>Eskerrik asko zure bisitagatik!</p>
             </div>
+            <div style="height: 15mm;"></div>
             <script>
                 window.onload = function() { window.print(); }
             </script>
@@ -263,5 +268,5 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
     iframe.contentDocument.write(ticketHTML);
     iframe.contentDocument.close();
 
-    setTimeout(() => { document.body.removeChild(iframe); }, 5000);
+    setTimeout(() => { document.body.removeChild(iframe); }, 60000);
 }
