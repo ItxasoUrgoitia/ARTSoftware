@@ -197,17 +197,16 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
         <head>
             <style>
                 @page { 
-                    margin: 0; 
-                    size: 80mm 3276mm; 
+                    margin: 0 !important; 
                 }
-                    html, body {
+                html, body {
                     height: auto;
                     margin: 0;
                     padding: 0;
                 }
-                table, tr, td, .totals-table, .center {
-                    page-break-inside: avoid;
-                    break-inside: avoid;
+                table, tr, td, .totals-table, .center, .ebaki-tartea {
+                    page-break-inside: avoid !important;
+                    break-inside: avoid !important;
                 }
                 body { font-family: 'Courier New', Courier, monospace; width: 78mm; margin: 0; padding: 0; color: #000; font-size: 14px; }
                 .center { text-align: center; }
@@ -222,6 +221,11 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
                 .totals-table td { padding: 2px 0; }
                 .totals-label { text-align: right; padding-right: 15px; }
                 .totals-value { text-align: right; font-weight: bold; }
+                .ebaki-tartea {
+                    height: 25mm;
+                    display: block;
+                    width: 100%;
+                }
             </style>
         </head>
         <body>
