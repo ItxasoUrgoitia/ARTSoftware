@@ -1,6 +1,7 @@
 let eskaera = []; // Saskia
 let totala = 0;
 let egungoEguna = 'ostirala'; // Defektuzkoa kargatzeko
+let azkenTiketa = null;
 
 document.addEventListener('DOMContentLoaded', () => {
     kargatuMenuBotoiak();
@@ -164,7 +165,12 @@ async function kobratu() {
         if (data.success) {
             const bueltakText = document.getElementById('bueltak-text').textContent;
             const emandakoDiruaText = emandakoDirua || totala; 
-            
+            azkenTiketa = {
+                eskaera: JSON.parse(JSON.stringify(eskaera)), 
+                totala: totala,
+                emandakoa: emandakoDiruaText,
+                bueltak: bueltakText
+            };
             inprimatuTiketa(eskaera, totala, emandakoDiruaText, bueltakText);
             
             erakutsiMezua(`Eskaera ondo kobratu da! Bueltak: ${bueltakText}`);
@@ -297,6 +303,7 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
                     <div class="ticket-container">
                         <div class="center" style="margin-top: 10px;">
                             <h2 style="margin: 0 0 5px 0; font-size: 14px;">Arrasate Rugby Taldea</h2>
+                            <div style="color: white; padding-top: 25mm; line-height: 1px;"> </div>
                             <div class="line"></div>
                             
                             <h1 style="font-size: 22px; margin: 20px 0; text-transform: uppercase;">
@@ -304,7 +311,7 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
                             </h1>
                             
                             <div class="line"></div>
-                            <div style="color: white; padding-top: 75mm; line-height: 1px;">.</div>
+                            <div style="color: white; padding-top: 55mm; line-height: 1px;">.</div>
                         </div>
                     </div>
                 `;
@@ -327,4 +334,23 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
 
     ticketWindow.document.write(ticketHTML);
     ticketWindow.document.close();
+}
+
+function berrinprimatuTiketa() {
+    if (!azkenTiketa) {
+        alert('Oraindik ez da ezer kobratu sesio honetan.');
+        return;
+    }
+
+    const seguru = confirm('Ziur zaude azken tiketa berrinprimatu nahi duzula?');
+    
+    if (seguru) {
+        inprimatuTiketa(
+            azkenTiketa.eskaera, 
+            azkenTiketa.totala, 
+            azkenTiketa.emandakoa, 
+            azkenTiketa.bueltak
+        );
+        erakutsiMezua('Azken tiketa berrinprimatzen...');
+    }
 }

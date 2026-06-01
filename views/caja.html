@@ -147,7 +147,7 @@
             padding: 16px; 
             display: flex;
             flex-direction: column;
-            justify-content: center;
+            justify-content: flex-start;
             align-items: center;
             gap: 15px; 
             transition: all 0.2s ease;
@@ -217,6 +217,7 @@
             display: flex;
             gap: 12px;
             width: 100%;
+            margin-top: auto;
         }
 
         .btn-minus, .btn-plus {
@@ -380,6 +381,21 @@
             text-transform: uppercase;
         }
         .kobratu-btn:hover { background-color: var(--success-hover); }
+        
+        .berrinprimatu-btn {
+            background-color: #6B7280; 
+            color: white;
+            border: none;
+            padding: 12px 24px; 
+            border-radius: 8px;
+            font-size: 1.1rem; 
+            font-weight: 700;
+            cursor: pointer;
+            transition: background-color 0.2s ease;
+            text-transform: uppercase;
+        }
+        
+        .berrinprimatu-btn:hover { background-color: #4B5563; }
 
         #mezu-laukia {
             position: fixed;
@@ -425,8 +441,9 @@
             </div>
         </div>
 
-        <div class="produktu-footer">
+        <div class="produktu-footer" style="justify-content: space-between;">
             <img src="/img/ARTLogo.png" alt="ART Logo" class="bottom-logo">
+            <button class="berrinprimatu-btn" onclick="berrinprimatuTiketa()">⟲ AZKEN TIKETA BERRINPRIMATU</button>
         </div>
     </div>
 
