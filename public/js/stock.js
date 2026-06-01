@@ -1,5 +1,14 @@
 document.addEventListener('DOMContentLoaded', () => {
     kargatuProduktuak();
+    setInterval(() => {
+        // Egiaztatu ea kaxaren bat editatzen ari den (ikusgarri dagoen)
+        const editatzenAriDira = document.querySelectorAll('.edit-input[style*="display: inline-block"]').length > 0;
+        
+        // Inor ez bada editatzen ari, orduan bai, taula eguneratu
+        if (!editatzenAriDira) {
+            kargatuProduktuak();
+        }
+    }, 5000);
 });
 
 async function kargatuProduktuak() {

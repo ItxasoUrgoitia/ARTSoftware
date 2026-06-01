@@ -183,9 +183,7 @@ async function kobratu() {
 }
 
 function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
-    const iframe = document.createElement('iframe');
-    iframe.style.display = 'none';
-    document.body.appendChild(iframe);
+    const ticketWindow = window.open('', '_blank', 'width=400,height=600');
 
     const dataOrdua = new Date().toLocaleString('eu-ES', { 
         year: 'numeric', month: '2-digit', day: '2-digit', 
@@ -193,26 +191,43 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
     });
 
     let ticketHTML = `
+        <!DOCTYPE html>
         <html>
         <head>
             <style>
                 @page { 
-                    margin: 0 !important; 
+                    margin: 0; 
+                    size: 78mm auto; 
                 }
-                html, body {
-                    height: auto;
+                
+                body {
                     margin: 0;
                     padding: 0;
+                    font-family: 'Courier New', Courier, monospace;
+                    font-size: 14px;
+                    color: #000;
                 }
-                table, tr, td, .totals-table, .center, .ebaki-tartea {
+                
+                .ticket-container {
+                    width: 64mm; 
+                    margin: 0 auto; 
+                }
+                
+                /* Orrialde berria sortzeko klasea (tiket txikientzat) */
+                .orrialde-berria {
+                    page-break-before: always;
+                    break-before: page;
+                }
+                
+                table, tr, td, .totals-table, .center {
                     page-break-inside: avoid !important;
                     break-inside: avoid !important;
                 }
-                body { font-family: 'Courier New', Courier, monospace; width: 78mm; margin: 0; padding: 0; color: #000; font-size: 14px; }
+                
                 .center { text-align: center; }
                 .bold { font-weight: bold; }
                 .line { border-bottom: 1px dashed #000; margin: 8px 0; }
-                table { width: 100%; border-collapse: collapse; margin-bottom: 10px; }
+                table { width: 100%; border-collapse: collapse; margin-bottom: 5px; }
                 td { padding: 4px 0; vertical-align: top; }
                 .qty { width: 15%; }
                 .name { width: 55%; }
@@ -221,65 +236,95 @@ function inprimatuTiketa(eskaeraDatuak, totalaDatuak, emandakoa, bueltak) {
                 .totals-table td { padding: 2px 0; }
                 .totals-label { text-align: right; padding-right: 15px; }
                 .totals-value { text-align: right; font-weight: bold; }
-                .ebaki-tartea {
-                    height: 25mm;
-                    display: block;
-                    width: 100%;
-                }
             </style>
         </head>
         <body>
-            <div class="center">
-                <h1 style="margin: 0; font-size: 24px;">ART</h1>
-                <h2 style="margin: 0; font-size: 16px;">Garagardo Azoka</h2>
-                <p style="margin: 5px 0 10px 0; font-size: 12px;">${dataOrdua}</p>
-            </div>
-            <div class="line"></div>
-            <table>
+            <div class="ticket-container">
+                <div class="center">
+                    <h1 style="margin: 0; font-size: 24px;">ART</h1>
+                    <h2 style="margin: 0; font-size: 16px;">Garagardo Azoka</h2>
+                    <p style="margin: 5px 0 10px 0; font-size: 12px;">${dataOrdua}</p>
+                </div>
+                <div class="line"></div>
+                <table>
     `;
 
     eskaeraDatuak.forEach(item => {
         const lerroPrezioa = (item.prezioa * item.kantitatea).toFixed(2);
         ticketHTML += `
-                <tr>
-                    <td class="qty">${item.kantitatea}x</td>
-                    <td class="name">${item.izena}</td>
-                    <td class="price">${lerroPrezioa} €</td>
-                </tr>
+                    <tr>
+                        <td class="qty">${item.kantitatea}x</td>
+                        <td class="name">${item.izena}</td>
+                        <td class="price">${lerroPrezioa} €</td>
+                    </tr>
         `;
     });
 
     ticketHTML += `
-            </table>
-            <div class="line"></div>
-            <table class="totals-table">
-                <tr>
-                    <td class="totals-label bold" style="font-size: 18px;">TOTALA:</td>
-                    <td class="totals-value" style="font-size: 18px;">${totalaDatuak.toFixed(2)} €</td>
-                </tr>
-                <tr>
-                    <td class="totals-label">Eskudirua:</td>
-                    <td class="totals-value">${emandakoa.toFixed(2)} €</td>
-                </tr>
-                <tr>
-                    <td class="totals-label">Bueltak:</td>
-                    <td class="totals-value">${bueltak}</td>
-                </tr>
-            </table>
-            <div class="line"></div>
-            <div class="center" style="margin-top: 15px;">
-                <p>Eskerrik asko zure bisitagatik!</p>
+                </table>
+                <div class="line"></div>
+                <table class="totals-table">
+                    <tr>
+                        <td class="totals-label bold" style="font-size: 18px;">TOTALA:</td>
+                        <td class="totals-value" style="font-size: 18px;">${totalaDatuak.toFixed(2)} €</td>
+                    </tr>
+                    <tr>
+                        <td class="totals-label">Eskudirua:</td>
+                        <td class="totals-value">${emandakoa.toFixed(2)} €</td>
+                    </tr>
+                    <tr>
+                        <td class="totals-label">Bueltak:</td>
+                        <td class="totals-value">${bueltak}</td>
+                    </tr>
+                </table>
+                <div class="line"></div>
+                <div class="center" style="margin-top: 15px;">
+                    <p>Eskerrik asko zure bisitagatik!</p>
+                </div>
             </div>
-            <div style="height: 15mm;"></div>
+    `;
+
+    // 2. TIKET TXIKIAK (Banakakoak, barrarako)
+    eskaeraDatuak.forEach(item => {
+        // Baldintza: Ez badu "jarra utzik" izena (letra larri/xeheak kontuan hartu gabe)
+        if (item.izena.toLowerCase() !== 'jarra utzik') {
+            
+            // Kantitatea zenbat den, hainbeste tiket txiki inprimatu
+            for (let i = 0; i < item.kantitatea; i++) {
+                ticketHTML += `
+                    <div class="orrialde-berria"></div>
+                    
+                    <div class="ticket-container">
+                        <div class="center" style="margin-top: 10px;">
+                            <h2 style="margin: 0 0 5px 0; font-size: 14px;">Arrasate Rugby Taldea</h2>
+                            <div class="line"></div>
+                            
+                            <h1 style="font-size: 22px; margin: 20px 0; text-transform: uppercase;">
+                                ${item.izena}
+                            </h1>
+                            
+                            <div class="line"></div>
+                            <div style="color: white; padding-top: 75mm; line-height: 1px;">.</div>
+                        </div>
+                    </div>
+                `;
+            }
+        }
+    });
+
+    ticketHTML += `
             <script>
-                window.onload = function() { window.print(); }
+                window.onload = function() { 
+                    setTimeout(() => { 
+                        window.print(); 
+                        window.close(); 
+                    }, 500);
+                }
             </script>
         </body>
         </html>
     `;
 
-    iframe.contentDocument.write(ticketHTML);
-    iframe.contentDocument.close();
-
-    setTimeout(() => { document.body.removeChild(iframe); }, 60000);
+    ticketWindow.document.write(ticketHTML);
+    ticketWindow.document.close();
 }
